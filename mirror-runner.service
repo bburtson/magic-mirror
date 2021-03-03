@@ -1,0 +1,14 @@
+[Unit]
+Description=Mirror Runner
+
+[Service]
+User=pi
+Group=pi
+WorkingDirectory=/home/pi/magic-mirror
+ExecStart=/home/pi/magic-mirror/main.py
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+Alias=mirror-runner.service
