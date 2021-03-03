@@ -1,6 +1,9 @@
-import RPi.GPIO as GPIO
 import time
 import threading
+
+# import RPi.GPIO as GPIO
+from gpio_emulator.EmulatorGUI import GPIO
+
 
 class Switch:
     def __init__(self, pin, changeCallback):
@@ -11,13 +14,11 @@ class Switch:
         self.listening = True
         self.thread = threading.Thread(None, self._listen)
         self.thread.start()
-        
+
     def _listen(self):
-        
         while self.listening:
             prev = self.isOn
             self.isOn = GPIO.input(self.pin)
             if (prev != self.isOn):
                 self.changeCallback(self.isOn)
             time.sleep(.1)
-

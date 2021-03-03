@@ -10,8 +10,8 @@ class FadingText:
     ST_FADEOUT = 1
     LINE_SPACING = -2
     MARGIN = 0.10
-    FADE_IN_EASING = lambda x: x  # Linear
-    FADE_OUT_EASING = lambda x: x  # Linear
+    def FADE_IN_EASING(x): return x  # Linear
+    def FADE_OUT_EASING(x): return x  # Linear
 
     def __init__(self, screen, fontlib, text, center_text=False):
         self.thr = None
@@ -65,7 +65,8 @@ class FadingText:
                 return
 
             state_time = time.time() + adv_offset - last_state_change
-            self.alpha = FadingText.FADE_IN_EASING(1.0 * state_time / fade_interval)
+            self.alpha = FadingText.FADE_IN_EASING(
+                1.0 * state_time / fade_interval)
 
             self.draw()
 
@@ -91,7 +92,8 @@ class FadingText:
                 return
 
             state_time = time.time() + adv_offset - last_state_change
-            self.alpha = 1. - FadingText.FADE_OUT_EASING(1.0 * state_time / fade_interval)
+            self.alpha = 1. - \
+                FadingText.FADE_OUT_EASING(1.0 * state_time / fade_interval)
 
             self.draw()
 
@@ -104,7 +106,8 @@ class FadingText:
         # see http://pygame.org/wiki/TextWrap
         lines = self.text.splitlines()
         y = 0
-        screen_w, screen_h = pygame.display.Info().current_w, pygame.display.Info().current_h
+        screen_w, screen_h = pygame.display.Info(
+        ).current_w, pygame.display.Info().current_h
 
         screen_w = int(screen_w * (1 - FadingText.MARGIN))
         screen_h = int(screen_h * (1 - FadingText.MARGIN))
@@ -134,7 +137,8 @@ class FadingText:
                 if i < len(line):
                     i = line.rfind(" ", 0, i) + 1
 
-                rendered_line = self.font.render(line[:i], True, Color.white.value)
+                rendered_line = self.font.render(
+                    line[:i], True, Color.white.value)
 
                 if rendered_line.get_rect().width > longest_line_length:
                     longest_line_length = rendered_line.get_rect().width
@@ -153,7 +157,8 @@ class FadingText:
         font_height = self.font.size('Tg')[1]
 
         # clear the screen
-        screen_w, screen_h = pygame.display.Info().current_w, pygame.display.Info().current_h
+        screen_w, screen_h = pygame.display.Info(
+        ).current_w, pygame.display.Info().current_h
         s2 = pygame.surface.Surface((screen_w, screen_h))
         self.drawing_surface = s2
         s2.set_alpha(255 * self.alpha)
@@ -163,13 +168,15 @@ class FadingText:
             s2.blit(rendered_line, (x, y))
             y += font_height + FadingText.LINE_SPACING
 
-        self.screen.blit(s2, (0, 0))  # always draw onto 0,0 of the screen surface
+        # always draw onto 0,0 of the screen surface
+        self.screen.blit(s2, (0, 0))
         pygame.display.flip()
 
     @staticmethod
     def centered(r_width, r_height):
 
-        screen_w, screen_h = pygame.display.Info().current_w, pygame.display.Info().current_h
+        screen_w, screen_h = pygame.display.Info(
+        ).current_w, pygame.display.Info().current_h
         x = screen_w / 2 - r_width / 2
         y = screen_h / 2 - r_height / 2
 
@@ -177,7 +184,8 @@ class FadingText:
 
     @staticmethod
     def random_position(r_width, r_height):
-        screen_w, screen_h = pygame.display.Info().current_w, pygame.display.Info().current_h
+        screen_w, screen_h = pygame.display.Info(
+        ).current_w, pygame.display.Info().current_h
         x_margin = int(0.05 * screen_w)
         y_margin = int(0.05 * screen_h)
 

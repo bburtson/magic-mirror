@@ -2,47 +2,36 @@
 from lib.mirror_text import MirrorText
 from lib.player import Player
 import pygame
-import sys
 
 
 class App:
-    def __init__(self, isProduction = False):
+    def __init__(self, is_prod=False):
         pygame.init()
-        info = pygame.display.Info()
+        inf = pygame.display.Info()
         pygame.mouse.set_visible(False)
-        if (isProduction):
-            flags = pygame.FULLSCREEN
-        else:
-            flags = pygame.RESIZABLE
-            
-        win = pygame.display.set_mode([info.current_w,info.current_h], flags)
+        flags = pygame.FULLSCREEN if is_prod else pygame.RESIZABLE
+        window = pygame.display.set_mode([inf.current_w, inf.current_h], flags)
         self.player = Player()
-        self.text = MirrorText('', win)
-        self.isRunning = False
-        
+        self.text = MirrorText('', window)
+        self.is_running = False
+
     def start(self):
-        if(self.isRunning): return
-        self.player.play()
-        self.text.run()
-        self.isRunning = True
-##        while self.isRunning:
-##            pygame.time.delay(10)
-##            for e in pygame.event.get():
-##                if e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE:
-##                    self.exit()
-        
+        if not self.is_running:
+            self.player.play()
+            self.text.run()
+            self.is_running = True
+
     def stop(self):
-        if(self.isRunning):
+        if self.is_running:
             try:
                 Player.stop()
                 self.text.stop()
-                self.isRunning = False
+                self.is_running = False
             except Exception as err:
-                print("Stop app threw an exception %d" % err)
-        
-        
+                print("[App.stop(self)] threw an exception %d" % err)
+
     def exit(self):
         self.stop()
         while self.text.thr.isAlive():
             pygame.time.delay(10)
-        pygame.quit()    
+        pygame.quit()

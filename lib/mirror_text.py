@@ -28,7 +28,8 @@ class MirrorText:
         for file in os.listdir(fontdir):
             filename, extension = os.path.splitext(file)
             if extension in font_exts:
-                self.fontlib.append(pygame.font.Font(os.path.join(fontdir, file), self.fontsize))
+                self.fontlib.append(pygame.font.Font(
+                    os.path.join(fontdir, file), self.fontsize))
 
     def run(self):
         if self.thr is not None:
@@ -38,7 +39,7 @@ class MirrorText:
 
         with open(os.path.join(self.basepath, 'cache/phrases.json')) as phrase_file:
             self.phrases = json.load(phrase_file)['phrases']
-            
+
         shuffle(self.phrases)
         self.thr = MirrorThread(0, 'loop', self)
         self.thr.start()
@@ -63,7 +64,8 @@ class MirrorText:
                     phrase_index = 0
 
                 phrase = self.phrases[phrase_index]
-                fading_text = FadingText(self.screen, self.fontlib, phrase['text'])
+                fading_text = FadingText(
+                    self.screen, self.fontlib, phrase['text'])
                 last_change = time.time()
                 fading_text.fade(FadingText.ST_FADEIN, FADE_IN_TIME)
 

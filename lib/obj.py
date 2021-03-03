@@ -1,0 +1,3 @@
+
+def Obj():
+    return type('', (), {})()

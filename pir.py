@@ -1,10 +1,15 @@
-import RPi.GPIO as GPIO
+
 from lib.power import Power
 from lib.switch import Switch
 from app import App
+from lib.obj import Obj
 import time
 
-settings = type('',(),{})()
+# import RPi.GPIO as GPIO
+from gpio_emulator.EmulatorGUI import GPIO
+
+
+settings = Obj()
 settings.lastMotionEndTime = None
 settings.maxIdleSeconds = 10
 
@@ -16,26 +21,28 @@ light = Power(4)
 app = App()
 Power(14).switchOn()
 
-def isIdle(): return settings.lastMotionEndTime != None
+
+def is_idle(): return settings.lastMotionEndTime != None
 def calcSecondsIdle(): return int(time.time() - settings.lastMotionEndTime)
 def resetIdleCountdown(): settings.lastMotionEndTime = None
+
 
 def onMotionSwitchChange(value):
     if (value):
         light.switchOn()
         resetIdleCountdown()
-        if(app.isRunning == False):
+        if(app.is_running == False):
             app.start()
             print("Started")
     else:
         light.switchOff()
         settings.lastMotionEndTime = time.time()
-        
+
 
 Switch(15, onMotionSwitchChange)
 
-while True:    
-    if (isIdle()):
+while True:
+    if (is_idle()):
         idle = calcSecondsIdle()
         print(idle)
         if(idle >= settings.maxIdleSeconds):
@@ -43,10 +50,6 @@ while True:
             app.stop()
             print("Stopped")
     time.sleep(1)
-        
-
 
 
 GPIO.cleanup()
-
-

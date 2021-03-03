@@ -4,14 +4,14 @@ import mutagen
 import time
 from random import *
 
+
 class Player:
     def __init__(self):
-        # os.system('amixer sset "PCM" 100%')
-##        os.system('amixer -c 0 cset numid=3 2')
         pygame.mixer.init()
         self.library = {}
         self.now_playing = None
-        self.base_path = os.path.join(os.path.dirname(os.path.abspath(__file__)))
+        self.base_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)))
         self.audio_dir = os.path.join(self.base_path, '../cache/audio')
 
     def _load_library(self):
@@ -24,15 +24,12 @@ class Player:
     def play(self):
         # reload the library each time in case the list has changed
         self._load_library()
-
         # If we have no music to play, don't play any music.
         if len(self.library.items()) == 0:
             return
-
         # If we're muted, don't play music
         if os.path.isfile(os.path.join(self.audio_dir, 'mute_audio.lock')):
             return
-
         filename, metadata = choice(list(self.library.items()))
         self._init_mixer(metadata)
         pygame.mixer.music.load(filename)
@@ -69,4 +66,3 @@ class Player:
     @staticmethod
     def is_busy():
         return pygame.mixer.music.get_busy()
-
